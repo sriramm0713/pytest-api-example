@@ -17,6 +17,10 @@ def test_pet_schema():
     assert response.status_code == 200
 
     # Validate the response schema against the defined schema in schemas.py
+    print("-----------")
+    print(response.json())
+    print(schemas.pet)
+    print("----------")
     validate(instance=response.json(), schema=schemas.pet)
 
 '''
@@ -34,6 +38,11 @@ def test_find_by_status_200(status):
     }
 
     response = api_helpers.get_api_data(test_endpoint, params)
+    assert response.status_code == 200
+
+    for pet in response.json():
+        assert pet["status"] == status
+        validate(instance=pet, schema=schemas.pet)
     # TODO...
 
 '''
@@ -43,4 +52,10 @@ TODO: Finish this test by...
 '''
 def test_get_by_id_404():
     # TODO...
-    pass
+    test_endpoint = "/pets/67"
+    response = api_helpers.get_api_data(test_endpoint)
+
+    assert response.status_code == 404
+
+    body = response.text
+    assert "not found" in body
